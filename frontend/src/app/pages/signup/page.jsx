@@ -5,11 +5,13 @@ import { Label } from "@/components/ui/label"; // Verifica esta ruta
 import { Input } from "@/components/ui/input"; // Verifica esta ruta
 import { Button } from "@/components/ui/button"; // Verifica esta ruta
 import Link from "next/link";
+import { EyeIcon, EyeOffIcon } from "@heroicons/react/solid"; // Asegúrate de tener Heroicons instalado
 
 export default function SignUp() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // Estado para controlar visibilidad de la contraseña
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
@@ -17,7 +19,8 @@ export default function SignUp() {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:5000/api/users/register", { // Cambia la URL según sea necesario
+      const response = await fetch("http://localhost:5000/api/users/register", {
+        // Cambia la URL según sea necesario
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -74,19 +77,30 @@ export default function SignUp() {
                   required
                 />
               </div>
-              <div className="space-y-2">
+              <div className="space-y-2 relative">
                 <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-2 top-9 text-gray-600"
+                >
+                  {showPassword ? (
+                    <EyeOffIcon className="h-5 w-5" />
+                  ) : (
+                    <EyeIcon className="h-5 w-5" />
+                  )}
+                </button>
               </div>
             </CardContent>
             <CardFooter>
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full mt-4">
                 Sign Up
               </Button>
             </CardFooter>

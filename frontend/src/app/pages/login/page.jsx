@@ -1,6 +1,7 @@
 "use client"; // Asegura que esto sea un Client Component
 
 import { useState } from "react";
+import { useRouter } from "next/navigation"; // Asegúrate de tener el hook de navegación
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -8,11 +9,12 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { EyeIcon, EyeOffIcon } from "@heroicons/react/solid"; // Asegúrate de tener Heroicons instalado
 
-export default function SignUp() {
+export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState(null);
   const [showPassword, setShowPassword] = useState(false); // Estado para controlar visibilidad de la contraseña
+  const router = useRouter(); // Hook de Next.js para navegación
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,7 +49,14 @@ export default function SignUp() {
       }
 
       console.log("Usuario registrado:", data);
-      console.log("enviando a otra pag");
+
+      // Verificar rol del usuario y redirigir
+      if (data.role === "admin") {
+        router.push("/admin"); // Ruta para la landing page del administrador
+      } else {
+        router.push("/user"); // Ruta para la landing page del usuario normal
+      }
+
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
       setErrorMessage("Ocurrió un error al intentar iniciar sesión.");

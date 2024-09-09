@@ -1,31 +1,36 @@
-"use client"; // Agrega esta línea al principio del archivo
+"use client";
 import { useState } from "react";
-import { Card, CardContent, CardFooter } from "@/components/ui/card"; // Verifica esta ruta
-import { Label } from "@/components/ui/label"; // Verifica esta ruta
-import { Input } from "@/components/ui/input"; // Verifica esta ruta
-import { Button } from "@/components/ui/button"; // Verifica esta ruta
+import { useRouter } from "next/navigation";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { EyeIcon, EyeOffIcon } from "@heroicons/react/solid"; // Asegúrate de tener Heroicons instalado
+import { EyeIcon, EyeOffIcon } from "@heroicons/react/solid";
 
 export default function SignUp() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // Estado para controlar visibilidad de la contraseña
+  const [role, setRole] = useState("user"); // Estado para el rol
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const router = useRouter();
+
+  // Simulación: Obtener el rol del usuario actual
+  const currentUserRole = "admin"; // Supón que esta lógica verifica si el usuario actual es admin
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       const response = await fetch("http://localhost:5000/api/users/register", {
-        // Cambia la URL según sea necesario
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ name, email, password, role }),
       });
 
       const data = await response.json();
@@ -36,6 +41,13 @@ export default function SignUp() {
 
       setSuccess("Usuario registrado con éxito");
       setError(null);
+
+      // Redirigir según el rol del usuario registrado
+      if (data.role === "admin") {
+        router.push("/admin");
+      } else {
+        router.push("/user");
+      }
     } catch (err) {
       setError(err.message);
       setSuccess(null);
@@ -98,6 +110,22 @@ export default function SignUp() {
                   )}
                 </button>
               </div>
+
+              {/* Mostrar selección de rol si el usuario actual es admin */}
+              {currentUserRole === "admin" && (
+                <div className="space-y-2">
+                  <Label htmlFor="role">Role</Label>
+                  <select
+                    id="role"
+                    value={role}
+                    onChange={(e) => setRole(e.target.value)}
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" // Aplica estilos adecuados a tu select
+                  >
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </div>
+              )}
             </CardContent>
             <CardFooter>
               <Button type="submit" className="w-full mt-4">

@@ -32,7 +32,7 @@ import { Button } from "@/components/ui/button"
 export function LandingPage() {
   return (
     (<div className="flex flex-col min-h-[100dvh]">
-      <header className="px-4 lg:px-6 h-14 flex items-center">
+      <header className="px-4 lg:px-6 h-14 flex items-center justify-center">
         <Link href="#" className="flex items-center justify-center" prefetch={false}>
           <CalendarIcon className="h-6 w-6" />
           <span className="sr-only">Task Manager</span>
@@ -57,11 +57,11 @@ export function LandingPage() {
             About
           </Link>
           <Link
-            href="#"
-            className="text-sm font-medium hover:underline underline-offset-4"
-            prefetch={false}>
-            Contact
-          </Link>
+                    href="/pages/login"
+                    className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+                    prefetch={false}>
+                    Log In
+                  </Link>
         </nav>
       </header>
       <main className="flex-1">
@@ -96,7 +96,7 @@ export function LandingPage() {
                 </div>
               </div>
               <img
-                src="/placeholder.svg"
+                src="/images/taskmanagement.png"
                 width="550"
                 height="550"
                 alt="Hero"

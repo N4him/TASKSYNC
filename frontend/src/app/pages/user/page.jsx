@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react"
+import { useState, useEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -14,17 +14,42 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 export default function TaskManagementUpdated() {
-  const [tasks, setTasks] = useState([
-    { id: 1, title: "Complete project proposal", status: "ongoing" },
-    { id: 2, title: "Review code changes", status: "ongoing" },
-    { id: 3, title: "Update documentation", status: "finished" },
-    { id: 4, title: "Prepare presentation", status: "ongoing" },
-    { id: 5, title: "Submit expense report", status: "finished" },
-  ])
+  const [tasks, setTasks] = useState([])
+  const [editingTask, setEditingTask] = useState(null)
+  const [newTaskTitle, setNewTaskTitle] = useState("")
 
-  const updateTaskStatus = (taskId, newStatus) => {
-    setTasks(tasks.map(task => 
-      task.id === taskId ? { ...task, status: newStatus } : task))
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  const fetchTasks = async () => {
+    const response = await fetch('http://localhost:5000/api/tasks');
+    const data = await response.json();
+    setTasks(data);
+  }
+
+  const updateTask = async (updatedTask) => {
+    const response = await fetch(`http://localhost:5000/api/tasks/${updatedTask.id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedTask),
+    });
+    if (response.ok) {
+      fetchTasks();
+      setEditingTask(null);
+    }
+  }
+
+  const toggleTaskStatus = async (taskId) => {
+    const task = tasks.find((task) => task.id === taskId);
+    if (!task) return; // Early exit if task not found
+    const updatedTask = {
+      ...task,
+      status: task.status === "ongoing" ? "finished" : "ongoing",
+    }
+    await updateTask(updatedTask);
   }
 
   return (
@@ -105,13 +130,13 @@ export default function TaskManagementUpdated() {
               <TabsContent value="ongoing">
                 <TaskList
                   tasks={tasks.filter(task => task.status === "ongoing")}
-                  updateTaskStatus={updateTaskStatus} />
+                  updateTaskStatus={toggleTaskStatus} />
               </TabsContent>
               
               <TabsContent value="finished">
                 <TaskList
                   tasks={tasks.filter(task => task.status === "finished")}
-                  updateTaskStatus={updateTaskStatus} />
+                  updateTaskStatus={toggleTaskStatus} />
               </TabsContent>
             </Tabs>
           </CardContent>
@@ -121,10 +146,7 @@ export default function TaskManagementUpdated() {
   );
 }
 
-function TaskList({
-  tasks,
-  updateTaskStatus
-}) {
+function TaskList({ tasks, updateTaskStatus }) {
   return (
     (<ul className="space-y-4">
       {tasks.map(task => (
@@ -143,14 +165,14 @@ function TaskList({
             {task.status === "ongoing" ? (
               <Button
                 size="sm"
-                onClick={() => updateTaskStatus(task.id, "finished")}
+                onClick={() => updateTaskStatus(task.id)} // Pass only taskId
                 className="bg-[#4FADFF] text-white hover:bg-[#3D8CD9]">
                 Mark as Finished
               </Button>
             ) : (
               <Button
                 size="sm"
-                onClick={() => updateTaskStatus(task.id, "ongoing")}
+                onClick={() => updateTaskStatus(task.id)} // Pass only taskId
                 className="bg-[#4FADFF] text-white hover:bg-[#3D8CD9]">
                 Set On Course
               </Button>

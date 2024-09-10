@@ -1,6 +1,6 @@
 "use client"; // Asegura que esto sea un Client Component
 
-import { useState } from "react";
+import { useState, useEffect } from 'react'
 import { useRouter } from "next/navigation"; // Asegúrate de tener el hook de navegación
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -13,15 +13,15 @@ export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState(null);
-  const [showPassword, setShowPassword] = useState(false); // Estado para controlar visibilidad de la contraseña
-  const router = useRouter(); // Hook de Next.js para navegación
+  const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const userData = {
-      email: email,
-      password: password,
+      email,
+      password,
     };
 
     console.log("Datos enviados:", userData);
@@ -35,14 +35,7 @@ export default function SignIn() {
         body: JSON.stringify(userData),
       });
 
-      const contentType = response.headers.get("content-type");
-      const text = await response.text();
-
-      if (!contentType || !contentType.includes("application/json")) {
-        throw new Error("Respuesta no es JSON válida.");
-      }
-
-      const data = JSON.parse(text);
+      const data = await response.json();
 
       if (!response.ok) {
         throw new Error(data.message || "Error en el servidor");
@@ -50,11 +43,10 @@ export default function SignIn() {
 
       console.log("Usuario registrado:", data);
 
-      // Verificar rol del usuario y redirigir
       if (data.role === "admin") {
-        router.push("/admin"); // Ruta para la landing page del administrador
+        router.push("/pages/admin");
       } else {
-        router.push("/user"); // Ruta para la landing page del usuario normal
+        router.push("/pages/user");
       }
 
     } catch (error) {

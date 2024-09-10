@@ -2,7 +2,7 @@ const User = require('../models/userModel');
 const bcrypt = require('bcryptjs');
 
 exports.createUser = async (req, res) => {
-  const { email, password, name } = req.body;
+  const { email, password, name, role } = req.body;
 
   try {
     // Verificar si el usuario ya existe
@@ -20,6 +20,7 @@ exports.createUser = async (req, res) => {
       email,
       password: hashedPassword, // Guardar la contraseña hasheada
       name,
+      role,
     });
 
     // Guardar el usuario en la base de datos
@@ -54,6 +55,7 @@ exports.getUsers = async (req, res) => {
       id: user._id,
       email: user.email,
       username: user.username,
+      role: user.role,
     });
 
   } catch (error) {

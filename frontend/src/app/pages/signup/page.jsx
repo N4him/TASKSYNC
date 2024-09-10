@@ -23,7 +23,7 @@ export default function SignUp() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    console.log(role);
     try {
       const response = await fetch("http://localhost:5000/api/users/register", {
         method: "POST",
@@ -34,19 +34,20 @@ export default function SignUp() {
       });
 
       const data = await response.json();
-
+      console.log(data);
+      
       if (!response.ok) {
         throw new Error(data.message || "Error al registrar");
       }
 
       setSuccess("Usuario registrado con éxito");
       setError(null);
-
+      console.log(role);
       // Redirigir según el rol del usuario registrado
-      if (data.role === "admin") {
-        router.push("/admin");
+      if (role == "admin") {
+        router.push("/pages/admin");
       } else {
-        router.push("/user");
+        router.push("/pages/user");
       }
     } catch (err) {
       setError(err.message);
@@ -118,7 +119,7 @@ export default function SignUp() {
                   <select
                     id="role"
                     value={role}
-                    onChange={(e) => setRole(e.target.value)}
+                    onChange={(e) => setRole(e.target.value.toLowerCase())}
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" // Aplica estilos adecuados a tu select
                   >
                     <option value="user">User</option>

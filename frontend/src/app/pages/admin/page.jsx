@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react"
+import { useState, useEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -31,44 +31,71 @@ import {
 import { Pencil, Trash2, Plus, User, LogOut, Settings, HelpCircle } from "lucide-react"
 
 export default function AdminPageUpdated() {
-  const [tasks, setTasks] = useState([
-    { id: 1, title: "Complete project proposal", status: "ongoing" },
-    { id: 2, title: "Review code changes", status: "ongoing" },
-    { id: 3, title: "Update documentation", status: "finished" },
-    { id: 4, title: "Prepare presentation", status: "ongoing" },
-    { id: 5, title: "Submit expense report", status: "finished" },
-  ])
+  const [tasks, setTasks] = useState([])
   const [editingTask, setEditingTask] = useState(null)
   const [newTaskTitle, setNewTaskTitle] = useState("")
 
-  const addTask = () => {
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  const fetchTasks = async () => {
+    const response = await fetch('http://localhost:5000/api/tasks');
+    const data = await response.json();
+    setTasks(data);
+  }
+
+  const addTask = async () => {
     if (newTaskTitle.trim() !== "") {
       const newTask = {
-        id: Math.max(0, ...tasks.map((t) => t.id)) + 1,
         title: newTaskTitle,
         status: "ongoing",
       }
-      setTasks([...tasks, newTask])
-      setNewTaskTitle("")
+      const response = await fetch('http://localhost:5000/api/tasks', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newTask),
+      });
+      if (response.ok) {
+        fetchTasks();
+        setNewTaskTitle("");
+      }
     }
   }
 
-  const updateTask = (updatedTask) => {
-    setTasks(tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task)))
-    setEditingTask(null)
+  const updateTask = async (updatedTask) => {
+    const response = await fetch(`http://localhost:5000/api/tasks/${updatedTask.id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updatedTask),
+    });
+    if (response.ok) {
+      fetchTasks();
+      setEditingTask(null);
+    }
   }
 
-  const deleteTask = (taskId) => {
-    setTasks(tasks.filter((task) => task.id !== taskId))
+  const deleteTask = async (taskId) => {
+    const response = await fetch(`http://localhost:5000/api/tasks/${taskId}`, {
+      method: 'DELETE',
+    });
+    if (response.ok) {
+      fetchTasks();
+    }
   }
 
-  const toggleTaskStatus = (taskId) => {
-    setTasks(tasks.map((task) =>
-      task.id === taskId
-        ? { ...task, status: task.status === "ongoing" ? "finished" : "ongoing" }
-        : task))
+  const toggleTaskStatus = async (taskId) => {
+    const task = tasks.find((task) => task.id === taskId);
+    const updatedTask = {
+      ...task,
+      status: task.status === "ongoing" ? "finished" : "ongoing",
+    }
+    updateTask(updatedTask);
   }
-
   return (
     (<div className="min-h-screen bg-[#0A1A2B] text-white">
       <nav className="bg-[#0E2337] p-4 flex justify-between items-center">

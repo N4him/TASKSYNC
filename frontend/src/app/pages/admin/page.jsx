@@ -50,6 +50,7 @@ export default function AdminPageUpdated() {
       const newTask = {
         title: newTaskTitle,
         status: "ongoing",
+        createdBy: "Admin User", // Aquí puedes colocar dinámicamente el nombre del admin logueado
       }
       const response = await fetch('http://localhost:5000/api/tasks', {
         method: 'POST',

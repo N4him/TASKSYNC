@@ -13,23 +13,27 @@ exports.getTasks = async (req, res) => {
 // Crear una nueva tarea
 exports.createTask = async (req, res) => {
   try {
-    const lastTask = await Task.findOne().sort({ id: -1 });
-    const newId = lastTask ? lastTask.id + 1 : 1;
+    const { title, status, createdBy } = req.body;
 
-    const task = new Task({
-      id: newId,
-      title: req.body.title,
-      description: req.body.description,
-      status: req.body.status || 'ongoing',
+    // Validación básica
+    if (!title || !createdBy) {
+      return res.status(400).json({ message: "Title and Admin are required" });
+    }
+
+    // Creación de la nueva tarea
+    const newTask = new Task({
+      title,
+      status: status || 'ongoing', // Estado por defecto
+      createdBy, // El nombre del administrador que crea la tarea
     });
 
-    const newTask = await task.save();
+    // Guardar en la base de datos
+    await newTask.save();
     res.status(201).json(newTask);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
+  } catch (error) {
+    res.status(500).json({ message: "Error creating task", error });
   }
 };
-
 // Actualizar una tarea
 exports.updateTask = async (req, res) => {
   try {

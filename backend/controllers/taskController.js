@@ -27,14 +27,19 @@ exports.createTask = async (req, res) => {
 exports.getTasksForUser = async (req, res) => {
   try {
     const userId = req.user.id; // Obtén el ID del usuario del middleware de autenticación
-    const tasks = await Task.find({ creator: userId }); // Filtrar tareas por creador
+    const tasks = await Task.find({ creator: userId })
+      .populate('assignedTo', 'name') // Incluye el nombre del usuario asignado
+      .exec();
     res.json(tasks);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
 
+
 // Actualizar una tarea
+// controllers/taskController.js
+
 exports.updateTask = async (req, res) => {
   try {
     const task = await Task.findOne({ id: req.params.id });
@@ -48,6 +53,7 @@ exports.updateTask = async (req, res) => {
     task.title = req.body.title || task.title;
     task.description = req.body.description || task.description;
     task.status = req.body.status || task.status;
+    task.assignedTo = req.body.assignedTo || task.assignedTo; // Actualizar asignado
 
     const updatedTask = await task.save();
     res.json(updatedTask);

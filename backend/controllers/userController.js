@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 require('dotenv').config(); // Asegúrate de que dotenv esté configurado
 
+// Crear un nuevo usuario
 exports.createUser = async (req, res) => {
   const { email, password, name, role } = req.body;
 
@@ -31,7 +32,18 @@ exports.createUser = async (req, res) => {
   }
 }
 
+// Obtener todos los usuarios con rol 'user'
 exports.getUsers = async (req, res) => {
+  try {
+    const users = await User.find({ role: 'user' });
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching users' });
+  }
+}
+
+// Login (iniciar sesión)
+exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {

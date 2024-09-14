@@ -18,14 +18,14 @@ export default function SignIn() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const userData = {
       email,
       password,
     };
-
+  
     console.log("Datos enviados:", userData);
-
+  
     try {
       const response = await fetch("http://localhost:5000/api/users/login", {
         method: "POST",
@@ -34,27 +34,30 @@ export default function SignIn() {
         },
         body: JSON.stringify(userData),
       });
-
+  
       const data = await response.json();
-
+  
       if (!response.ok) {
         throw new Error(data.message || "Error en el servidor");
       }
-
+  
       console.log("Usuario registrado:", data);
-
+  
+      // Guardar el token en localStorage
+      localStorage.setItem("token", data.token);
+  
       if (data.role === "admin") {
         router.push("/pages/admin");
       } else {
         router.push("/pages/user");
       }
-
+  
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
       setErrorMessage("Ocurrió un error al intentar iniciar sesión.");
     }
   };
-
+  
   return (
     <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-md space-y-6 text-center">

@@ -1,6 +1,7 @@
 const User = require('../models/userModel');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken'); // Asegúrate de haber instalado el paquete 'jsonwebtoken'
+const jwt = require('jsonwebtoken');
+require('dotenv').config(); // Asegúrate de que dotenv esté configurado
 
 exports.createUser = async (req, res) => {
   const { email, password, name, role } = req.body;
@@ -49,7 +50,7 @@ exports.getUsers = async (req, res) => {
     // Generar un token JWT
     const token = jwt.sign(
       { id: user._id, email: user.email, role: user.role },
-      'secretKey', // Reemplaza con tu clave secreta
+      process.env.JWT_SECRET_KEY, // Usa la variable de entorno
       { expiresIn: '1h' } // El token expira en 1 hora, ajusta según necesites
     );
 

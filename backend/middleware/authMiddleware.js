@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+require('dotenv').config(); // Asegúrate de que dotenv esté configurado
 
 const authenticateUser = (req, res, next) => {
   const token = req.headers['authorization']?.replace('Bearer ', '');
@@ -8,8 +9,8 @@ const authenticateUser = (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, 'secretKey'); // Reemplaza 'secretKey' con tu clave secreta
-    req.user = { id: decoded.id }; // Asegúrate de que el token contiene el ID del usuario
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY); // Usa la variable de entorno
+    req.user = { id: decoded.id, email: decoded.email, role: decoded.role };
     next();
   } catch (error) {
     console.error('Error al verificar el token:', error);

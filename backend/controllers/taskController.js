@@ -13,6 +13,7 @@ exports.createTask = async (req, res) => {
       description: req.body.description,
       status: req.body.status || 'ongoing',
       assignedTo: req.body.assignedTo, // Asignar la tarea a un usuario específico
+      creator: req.user.id // Establecer el creador de la tarea al usuario autenticado
     });
 
     const newTask = await task.save();
@@ -26,7 +27,7 @@ exports.createTask = async (req, res) => {
 exports.getTasksForUser = async (req, res) => {
   try {
     const userId = req.user.id; // Obtén el ID del usuario del middleware de autenticación
-    const tasks = await Task.find({ assignedTo: userId });
+    const tasks = await Task.find({ creator: userId }); // Filtrar tareas por creador
     res.json(tasks);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -40,7 +41,7 @@ exports.updateTask = async (req, res) => {
     if (!task) return res.status(404).json({ message: 'Task not found' });
 
     // Verificar si el usuario está autorizado a actualizar la tarea
-    if (task.assignedTo.toString() !== req.user.id) {
+    if (task.creator.toString() !== req.user.id) {
       return res.status(403).json({ message: 'Unauthorized' });
     }
 
@@ -62,7 +63,7 @@ exports.deleteTask = async (req, res) => {
     if (!task) return res.status(404).json({ message: 'Task not found' });
 
     // Verificar si el usuario está autorizado a eliminar la tarea
-    if (task.assignedTo.toString() !== req.user.id) {
+    if (task.creator.toString() !== req.user.id) {
       return res.status(403).json({ message: 'Unauthorized' });
     }
 

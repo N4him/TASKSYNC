@@ -23,6 +23,11 @@ const taskSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User', // Referencia al modelo User
   },
+  creator: { // Nuevo campo para el creador de la tarea
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  }
 });
 
 // Middleware para asignar un ID único y ascendente antes de guardar la tarea

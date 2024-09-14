@@ -45,9 +45,9 @@ export default function SignUp() {
       console.log(role);
       // Redirigir según el rol del usuario registrado
       if (role == "admin") {
-        router.push("/pages/admin");
+        router.push("/pages/login");
       } else {
-        router.push("/pages/user");
+        router.push("/pages/signin");
       }
     } catch (err) {
       setError(err.message);

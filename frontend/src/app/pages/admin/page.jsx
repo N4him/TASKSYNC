@@ -1,9 +1,10 @@
 "use client";
-import { useState, useEffect } from 'react'
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Table,
   TableBody,
@@ -11,7 +12,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 import {
   Dialog,
   DialogContent,
@@ -19,7 +20,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,78 +28,116 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Pencil, Trash2, Plus, User, LogOut, Settings, HelpCircle } from "lucide-react"
+} from "@/components/ui/dropdown-menu";
+import { Pencil, Trash2, Plus, User, LogOut, Settings, HelpCircle } from "lucide-react";
+
+const API_URL = "http://localhost:5000/api/tasks";
 
 export default function AdminPageUpdated() {
-  const [tasks, setTasks] = useState([])
-  const [editingTask, setEditingTask] = useState(null)
-  const [newTaskTitle, setNewTaskTitle] = useState("")
+  const [tasks, setTasks] = useState([]);
+  const [editingTask, setEditingTask] = useState(null);
+  const [newTaskTitle, setNewTaskTitle] = useState("");
 
+  // Fetch tasks on component mount
   useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        console.log("Token en localStorage:", token); // Verifica el token aquí
+
+        const response = await axios.get(API_URL, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Asegúrate de que el token esté en el encabezado
+          },
+        });
+        console.log("Tareas obtenidas:", response.data); // Verifica las tareas obtenidas
+        setTasks(response.data);
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+      }
+    };
     fetchTasks();
   }, []);
 
-  const fetchTasks = async () => {
-    const response = await fetch('http://localhost:5000/api/tasks');
-    const data = await response.json();
-    setTasks(data);
-  }
-
   const addTask = async () => {
     if (newTaskTitle.trim() !== "") {
-      const newTask = {
-        title: newTaskTitle,
-        status: "ongoing",
-        createdBy: "Admin User", // Aquí puedes colocar dinámicamente el nombre del admin logueado
-      }
-      const response = await fetch('http://localhost:5000/api/tasks', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newTask),
-      });
-      if (response.ok) {
-        fetchTasks();
+      try {
+        const token = localStorage.getItem("token");
+        console.log("Token en localStorage (addTask):", token); // Verifica el token aquí
+
+        const response = await axios.post(API_URL, {
+          title: newTaskTitle,
+          status: "ongoing",
+        }, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log("Tarea añadida:", response.data); // Verifica la tarea añadida
+        setTasks([...tasks, response.data]);
         setNewTaskTitle("");
+      } catch (error) {
+        console.error("Error adding task:", error);
       }
     }
-  }
+  };
 
   const updateTask = async (updatedTask) => {
-    const response = await fetch(`http://localhost:5000/api/tasks/${updatedTask.id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(updatedTask),
-    });
-    if (response.ok) {
-      fetchTasks();
+    try {
+      const token = localStorage.getItem("token");
+      console.log("Token en localStorage (updateTask):", token); // Verifica el token aquí
+
+      await axios.patch(`${API_URL}/${updatedTask.id}`, updatedTask, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setTasks(tasks.map((task) => (task.id === updatedTask.id ? updatedTask : task)));
       setEditingTask(null);
+    } catch (error) {
+      console.error("Error updating task:", error);
     }
-  }
+  };
 
   const deleteTask = async (taskId) => {
-    const response = await fetch(`http://localhost:5000/api/tasks/${taskId}`, {
-      method: 'DELETE',
-    });
-    if (response.ok) {
-      fetchTasks();
+    try {
+      const token = localStorage.getItem("token");
+      console.log("Token en localStorage (deleteTask):", token); // Verifica el token aquí
+
+      await axios.delete(`${API_URL}/${taskId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setTasks(tasks.filter((task) => task.id !== taskId));
+    } catch (error) {
+      console.error("Error deleting task:", error);
     }
-  }
+  };
 
   const toggleTaskStatus = async (taskId) => {
     const task = tasks.find((task) => task.id === taskId);
-    const updatedTask = {
-      ...task,
-      status: task.status === "ongoing" ? "finished" : "ongoing",
+    const updatedStatus = task.status === "ongoing" ? "finished" : "ongoing";
+
+    try {
+      const token = localStorage.getItem("token");
+      console.log("Token en localStorage (toggleTaskStatus):", token); // Verifica el token aquí
+
+      await axios.patch(`${API_URL}/${taskId}`, { status: updatedStatus }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setTasks(tasks.map((task) =>
+        task.id === taskId ? { ...task, status: updatedStatus } : task
+      ));
+    } catch (error) {
+      console.error("Error toggling task status:", error);
     }
-    updateTask(updatedTask);
-  }
+  };
+
   return (
-    (<div className="min-h-screen bg-[#0A1A2B] text-white">
+    <div className="min-h-screen bg-[#0A1A2B] text-white">
       <nav className="bg-[#0E2337] p-4 flex justify-between items-center">
         <div className="flex items-center space-x-4">
           <svg
@@ -161,7 +200,7 @@ export default function AdminPageUpdated() {
         <Card className="max-w-4xl mx-auto bg-[#0E2337] border-[#1E3A5A]">
           <CardContent className="p-6">
             <h1 className="text-3xl font-bold mb-6 text-center text-[#4FADFF]">Task Management - Admin</h1>
-
+  
             <div className="mb-6 flex items-center space-x-4">
               <Input
                 type="text"
@@ -173,7 +212,7 @@ export default function AdminPageUpdated() {
                 <Plus className="mr-2 h-4 w-4" /> Add Task
               </Button>
             </div>
-
+  
             <Table>
               <TableHeader>
                 <TableRow>
@@ -255,6 +294,6 @@ export default function AdminPageUpdated() {
           </CardContent>
         </Card>
       </main>
-    </div>)
+    </div>
   );
-}
+}  

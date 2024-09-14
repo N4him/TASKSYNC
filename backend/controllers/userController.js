@@ -1,5 +1,6 @@
 const User = require('../models/userModel');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken'); // Asegúrate de haber instalado el paquete 'jsonwebtoken'
 
 exports.createUser = async (req, res) => {
   const { email, password, name, role } = req.body;
@@ -45,10 +46,17 @@ exports.getUsers = async (req, res) => {
       return res.status(400).json({ message: 'Contraseña incorrecta' });
     }
 
+    // Generar un token JWT
+    const token = jwt.sign(
+      { id: user._id, email: user.email, role: user.role },
+      'secretKey', // Reemplaza con tu clave secreta
+      { expiresIn: '1h' } // El token expira en 1 hora, ajusta según necesites
+    );
+
     res.status(200).json({
+      token,
       id: user._id,
       email: user.email,
-      username: user.username,
       role: user.role,
     });
 

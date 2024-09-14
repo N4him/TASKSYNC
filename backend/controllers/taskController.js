@@ -1,14 +1,5 @@
 const Task = require('../models/taskModel');
-
-// Obtener todas las tareas
-exports.getTasks = async (req, res) => {
-  try {
-    const tasks = await Task.find();
-    res.json(tasks);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
+const User = require('../models/userModel');
 
 // Crear una nueva tarea
 exports.createTask = async (req, res) => {
@@ -21,6 +12,7 @@ exports.createTask = async (req, res) => {
       title: req.body.title,
       description: req.body.description,
       status: req.body.status || 'ongoing',
+      assignedTo: req.body.assignedTo, // Asignar la tarea a un usuario específico
     });
 
     const newTask = await task.save();
@@ -30,11 +22,27 @@ exports.createTask = async (req, res) => {
   }
 };
 
+// Obtener tareas asignadas a un usuario
+exports.getTasksForUser = async (req, res) => {
+  try {
+    const userId = req.user.id; // Obtén el ID del usuario del middleware de autenticación
+    const tasks = await Task.find({ assignedTo: userId });
+    res.json(tasks);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
 // Actualizar una tarea
 exports.updateTask = async (req, res) => {
   try {
     const task = await Task.findOne({ id: req.params.id });
     if (!task) return res.status(404).json({ message: 'Task not found' });
+
+    // Verificar si el usuario está autorizado a actualizar la tarea
+    if (task.assignedTo.toString() !== req.user.id) {
+      return res.status(403).json({ message: 'Unauthorized' });
+    }
 
     task.title = req.body.title || task.title;
     task.description = req.body.description || task.description;
@@ -50,10 +58,14 @@ exports.updateTask = async (req, res) => {
 // Eliminar una tarea
 exports.deleteTask = async (req, res) => {
   try {
-    console.log(req.params.id);
     const task = await Task.findOne({ id: req.params.id });
     if (!task) return res.status(404).json({ message: 'Task not found' });
-    console.log(task);
+
+    // Verificar si el usuario está autorizado a eliminar la tarea
+    if (task.assignedTo.toString() !== req.user.id) {
+      return res.status(403).json({ message: 'Unauthorized' });
+    }
+
     await Task.deleteOne({ id: req.params.id });
     res.json({ message: 'Task deleted' });
   } catch (err) {

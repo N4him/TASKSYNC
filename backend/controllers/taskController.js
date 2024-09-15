@@ -3,7 +3,15 @@ const Task = require('../models/taskModel');
 // Obtener todas las tareas
 exports.getTasks = async (req, res) => {
   try {
-    const tasks = await Task.find();
+    const categoryFilter = req.query.category;
+    let tasks;
+
+    if (categoryFilter) {
+      tasks = await Task.find({ category: categoryFilter });
+    } else {
+      tasks = await Task.find();
+    }
+
     res.json(tasks);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -21,6 +29,7 @@ exports.createTask = async (req, res) => {
       title: req.body.title,
       description: req.body.description,
       status: req.body.status || 'ongoing',
+      category: req.body.category || 'Uncategorized', // Establecer categoría
     });
 
     const newTask = await task.save();
@@ -30,22 +39,25 @@ exports.createTask = async (req, res) => {
   }
 };
 
-// Actualizar una tarea
+// Actualizar una tarea utilizando un ID personalizado
 exports.updateTask = async (req, res) => {
   try {
-    const task = await Task.findOne({ id: req.params.id });
-    if (!task) return res.status(404).json({ message: 'Task not found' });
+    const updatedTask = await Task.findOneAndUpdate(
+      { customId: req.params.customId },  // Buscar por el campo de ID personalizado
+      { category: req.body.category },   // Actualizar la categoría
+      { new: true }
+    );
+    
+    if (!updatedTask) {
+      return res.status(404).json({ message: "Task not found" });
+    }
 
-    task.title = req.body.title || task.title;
-    task.description = req.body.description || task.description;
-    task.status = req.body.status || task.status;
-
-    const updatedTask = await task.save();
     res.json(updatedTask);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 };
+
 
 // Eliminar una tarea
 exports.deleteTask = async (req, res) => {
@@ -59,4 +71,13 @@ exports.deleteTask = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
+  // Obtener todas las categorías
+
 };
+exports.getCategories = async (req, res) => {
+  try {
+    const categories = await Task.distinct('category');
+    res.json(categories);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }};

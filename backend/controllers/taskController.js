@@ -24,12 +24,16 @@ exports.createTask = async (req, res) => {
     const lastTask = await Task.findOne().sort({ id: -1 });
     const newId = lastTask ? lastTask.id + 1 : 1;
 
+    // Set default deadline to tomorrow if not provided
+    const deadline = req.body.deadline ? new Date(req.body.deadline).toISOString() : new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+
     const task = new Task({
       id: newId,
       title: req.body.title,
       description: req.body.description,
       status: req.body.status || 'ongoing',
       category: req.body.category || 'Uncategorized', // Establecer categoría
+      deadline: deadline  // Establecer fecha límite
     });
 
     const newTask = await task.save();
@@ -44,7 +48,12 @@ exports.updateTask = async (req, res) => {
   try {
     const updatedTask = await Task.findOneAndUpdate(
       { customId: req.params.customId },  // Buscar por el campo de ID personalizado
-      { category: req.body.category },   // Actualizar la categoría
+      { 
+        title: req.body.title, 
+        status: req.body.status, 
+        category: req.body.category,
+        deadline: req.body.deadline ? new Date(req.body.deadline).toISOString() : undefined // Actualizar la fecha límite si se proporciona
+      },   
       { new: true }
     );
     

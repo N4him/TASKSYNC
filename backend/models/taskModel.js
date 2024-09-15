@@ -19,6 +19,11 @@ const taskSchema = new mongoose.Schema({
     enum: ['ongoing', 'finished'],
     default: 'ongoing',
   },
+  category: { 
+    type: String,
+    required: true,
+    default: 'None' 
+  } // Nueva propiedad para la categoría
 });
 
 // Middleware para asignar un ID único y ascendente antes de guardar la tarea

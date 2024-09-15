@@ -30,26 +30,42 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Pencil, Trash2, Plus, User, LogOut, Settings, HelpCircle } from "lucide-react"
 
-export default function AdminPageUpdated() {
-  const [tasks, setTasks] = useState([])
-  const [editingTask, setEditingTask] = useState(null)
-  const [newTaskTitle, setNewTaskTitle] = useState("")
+const formatDateForInput = (dateString) => {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  // Convert to local time zone and format as "YYYY-MM-DDTHH:MM"
+  const offset = date.getTimezoneOffset();
+  date.setMinutes(date.getMinutes() - offset);
+  return date.toISOString().slice(0, 16);
+};
 
+const formatDateForDisplay = (dateString) => {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  // Convert to local time zone and format as locale-specific date/time
+  return date.toLocaleString();
+};
+export default function AdminPageUpdated() {
+  const [tasks, setTasks] = useState([]);
+  const [editingTask, setEditingTask] = useState(null);
+  const [newTaskTitle, setNewTaskTitle] = useState("");
+  
   useEffect(() => {
     fetchTasks();
   }, []);
-
+  
   const fetchTasks = async () => {
     const response = await fetch('http://localhost:5000/api/tasks');
     const data = await response.json();
     setTasks(data);
   }
-
+  
   const addTask = async () => {
     if (newTaskTitle.trim() !== "") {
       const newTask = {
         title: newTaskTitle,
         status: "ongoing",
+        deadline: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // Default deadline to tomorrow
       }
       const response = await fetch('http://localhost:5000/api/tasks', {
         method: 'POST',
@@ -96,8 +112,9 @@ export default function AdminPageUpdated() {
     }
     updateTask(updatedTask);
   }
+
   return (
-    (<div className="min-h-screen bg-[#0A1A2B] text-white">
+    <div className="min-h-screen bg-[#0A1A2B] text-white">
       <nav className="bg-[#0E2337] p-4 flex justify-between items-center">
         <div className="flex items-center space-x-4">
           <svg
@@ -178,6 +195,7 @@ export default function AdminPageUpdated() {
                 <TableRow>
                   <TableHead className="text-white">ID</TableHead>
                   <TableHead className="text-white">Title</TableHead>
+                  <TableHead className="text-white">Deadline</TableHead>
                   <TableHead className="text-white">Status</TableHead>
                   <TableHead className="text-white">Actions</TableHead>
                 </TableRow>
@@ -187,6 +205,7 @@ export default function AdminPageUpdated() {
                   <TableRow key={task.id}>
                     <TableCell className="text-white">{task.id}</TableCell>
                     <TableCell className="text-white">{task.title}</TableCell>
+                    <TableCell className="text-white">{formatDateForDisplay(task.deadline)}</TableCell>
                     <TableCell>
                       <Button
                         variant="outline"
@@ -227,6 +246,19 @@ export default function AdminPageUpdated() {
                                   setEditingTask(editingTask ? { ...editingTask, title: e.target.value } : null)
                                 }
                                 className="col-span-3" />
+                              <Label htmlFor="task-deadline" className="text-right mt-4">
+                                Deadline
+                              </Label>
+                              <Input
+                                id="task-deadline"
+                                type="datetime-local"
+                                value={editingTask?.deadline
+                                  ? formatDateForInput(editingTask.deadline) // Use formatting function for input
+                                  : ""}
+                                onChange={(e) =>
+                                  setEditingTask(editingTask ? { ...editingTask, deadline: e.target.value } : null)
+                                }
+                                className="col-span-3" />
                             </div>
                             <DialogFooter>
                               <Button
@@ -254,6 +286,9 @@ export default function AdminPageUpdated() {
           </CardContent>
         </Card>
       </main>
-    </div>)
+    </div>
   );
+
+  
+
 }

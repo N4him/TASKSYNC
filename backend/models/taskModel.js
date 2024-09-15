@@ -23,7 +23,8 @@ const taskSchema = new mongoose.Schema({
     type: String,
     required: true,
     default: 'None' 
-  } // Nueva propiedad para la categoría
+  },
+  deadline: Date,
 });
 
 // Middleware para asignar un ID único y ascendente antes de guardar la tarea

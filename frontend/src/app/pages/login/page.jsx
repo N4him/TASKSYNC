@@ -63,17 +63,17 @@ export default function SignIn() {
       <div className="mx-auto max-w-md space-y-6 text-center">
         <div className="space-y-2">
           <h1 className="text-3xl font-bold tracking-tighter text-foreground sm:text-4xl">
-            Organize your tasks with ease
+            Organiza tus tareas de forma fácil
           </h1>
           <p className="text-muted-foreground">
-            Sign up for our task management application and take control of your productivity.
+            Inicia sesión ahora en TaskSync y controla tu flujo de trabajo de mejor manera
           </p>
         </div>
         <Card>
           <CardContent className="space-y-4">
             <form onSubmit={handleSubmit}>
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">E-mail</Label>
                 <Input
                   id="email"
                   type="email"
@@ -84,7 +84,7 @@ export default function SignIn() {
                 />
               </div>
               <div className="space-y-2 relative">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">Contraseña</Label>
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
@@ -106,7 +106,7 @@ export default function SignIn() {
               </div>
               <CardFooter className="mt-4">
                 <Button type="submit" className="w-full">
-                  Sign In
+                  Inicia sesión
                 </Button>
               </CardFooter>
             </form>
@@ -116,9 +116,9 @@ export default function SignIn() {
           <div className="text-red-500 text-sm mt-2">{errorMessage}</div>
         )}
         <div className="text-sm text-muted-foreground">
-          Don't have an account?{" "}
+          ¿No tiene una cuenta?{" "}
           <Link href="/pages/signup" className="underline" prefetch={false}>
-            Sign in
+            Regístrese
           </Link>
         </div>
       </div>

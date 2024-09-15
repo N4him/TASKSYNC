@@ -60,17 +60,17 @@ export default function SignUp() {
       <div className="mx-auto max-w-md space-y-6 text-center">
         <div className="space-y-2">
           <h1 className="text-3xl font-bold tracking-tighter text-foreground sm:text-4xl">
-            Organize your tasks with ease
+            Organiza tus tareas de forma fácil 
           </h1>
           <p className="text-muted-foreground">
-            Sign up for our task management application and take control of your productivity.
+            Regístrate ahora en TaskSync y controla tu flujo de trabajo de mejor manera
           </p>
         </div>
         <Card>
           <form onSubmit={handleSubmit}>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
+                <Label htmlFor="name">Nombre</Label>
                 <Input
                   id="name"
                   value={name}
@@ -80,7 +80,7 @@ export default function SignUp() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">E-mail</Label>
                 <Input
                   id="email"
                   type="email"
@@ -91,7 +91,7 @@ export default function SignUp() {
                 />
               </div>
               <div className="space-y-2 relative">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">Contraseña</Label>
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
@@ -115,14 +115,14 @@ export default function SignUp() {
               {/* Mostrar selección de rol si el usuario actual es admin */}
               {currentUserRole === "admin" && (
                 <div className="space-y-2">
-                  <Label htmlFor="role">Role</Label>
+                  <Label htmlFor="role">Rol</Label>
                   <select
                     id="role"
                     value={role}
                     onChange={(e) => setRole(e.target.value.toLowerCase())}
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" // Aplica estilos adecuados a tu select
                   >
-                    <option value="user">User</option>
+                    <option value="user">Usuario</option>
                     <option value="admin">Admin</option>
                   </select>
                 </div>
@@ -130,7 +130,7 @@ export default function SignUp() {
             </CardContent>
             <CardFooter>
               <Button type="submit" className="w-full mt-4">
-                Sign Up
+                Registrarse
               </Button>
             </CardFooter>
           </form>
@@ -138,9 +138,9 @@ export default function SignUp() {
           {success && <p className="text-green-500">{success}</p>}
         </Card>
         <div className="text-sm text-muted-foreground">
-          Already have an account?{" "}
+          ¿Ya tiene una cuenta?{" "}
           <Link href="/pages/login" className="underline" prefetch={false}>
-            Log in
+            Inicie sesión
           </Link>
         </div>
       </div>

@@ -1,5 +1,16 @@
+const nodemailer = require('nodemailer');
 const Task = require('../models/taskModel');
 const User = require('../models/userModel');
+
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: process.env.SMTP_PORT,
+  secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
+  auth: {
+    user: process.env.SMTP_USER, // usuario SMTP
+    pass: process.env.SMTP_PASS  // contraseña SMTP
+  }
+});
 
 // Crear una nueva tarea
 exports.createTask = async (req, res) => {
@@ -17,6 +28,29 @@ exports.createTask = async (req, res) => {
     });
 
     const newTask = await task.save();
+
+    // Buscar el correo del usuario al que se ha asignado la tarea
+    if (req.body.assignedTo) {
+      const assignedUser = await User.findById(req.body.assignedTo);
+      if (assignedUser && assignedUser.email) {
+        // Preparar y enviar el correo
+        const mailOptions = {
+          from: process.env.SMTP_USER, // El correo desde el que se envía
+          to: assignedUser.email, // El correo del usuario asignado
+          subject: 'Nueva tarea asignada',
+          text: `Hola ${assignedUser.name},\n\nSe te ha asignado una nueva tarea: "${task.title}".\nDescripción: ${task.description}\n\nSaludos,\nEquipo de TaskMaster`,
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+            console.error('Error al enviar el correo:', error);
+          } else {
+            console.log('Correo enviado: ' + info.response);
+          }
+        });
+      }
+    }
+
     res.status(201).json(newTask);
   } catch (err) {
     res.status(400).json({ message: err.message });

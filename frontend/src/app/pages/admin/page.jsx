@@ -74,14 +74,25 @@ export default function AdminPageUpdated() {
     if (newTaskTitle.trim() !== "") {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.post(API_URL, {
-          title: newTaskTitle,
-          status: "ongoing",
-          assignedTo: selectedUser ? selectedUser._id : null // Asegúrate de enviar el ID del usuario
-        }, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setTasks([...tasks, response.data]);
+        const response = await axios.post(
+          API_URL,
+          {
+            title: newTaskTitle,
+            status: "ongoing",
+            assignedTo: selectedUser ? selectedUser._id : null, // Asegúrate de enviar el ID del usuario
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+  
+        // Aquí incluimos la información completa del usuario en el nuevo estado de las tareas
+        const newTask = {
+          ...response.data,
+          assignedTo: selectedUser ? { _id: selectedUser._id, name: selectedUser.name } : null,
+        };
+  
+        setTasks([...tasks, newTask]);
         setNewTaskTitle("");
         setSelectedUser(null); // Limpiar el usuario seleccionado
       } catch (error) {
@@ -89,6 +100,7 @@ export default function AdminPageUpdated() {
       }
     }
   };
+  
 
   const updateTask = async (updatedTask) => {
     try {
@@ -132,11 +144,11 @@ export default function AdminPageUpdated() {
 
   const findUserNameById = (id) => {
     const user = users.find(user => user._id === id);
-    return user ? user.name : "Not Assigned";
+    return user ? user.name : "";
   };
-  
 
-  
+
+
 
   return (
     <div className="min-h-screen bg-[#0A1A2B] text-white">
@@ -245,7 +257,8 @@ export default function AdminPageUpdated() {
                       </Button>
                     </TableCell>
                     <TableCell>
-                    {task.assignedTo ? findUserNameById(task.assignedTo) : "Not Assigned"}
+                    {task.assignedTo ? findUserNameById(task.assignedTo.name) : ""}
+                   {task.assignedTo ? task.assignedTo.name : 'Unassigned'}
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center space-x-2">

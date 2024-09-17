@@ -33,7 +33,7 @@ export function LandingPage() {
   return (
     <div className="flex flex-col min-h-[100dvh]">
         <header className="px-4 lg:px-8 h-auto flex items-center justify-between">
-          <Link href="#" className="flex items-| justify-center" prefetch={false}>
+          <Link href="/" className="flex items-| justify-center" prefetch={false}>
             <img src="/images/logo_transparent.png" alt="Logo principal" className="h-24 w-24 max-w-none" />
             <span className="sr-only">Task Manager</span>
           </Link>
@@ -45,13 +45,13 @@ export function LandingPage() {
             Características
             </Link>
           <Link
-            href="#"
+            href="/pages/prices"
             className="text-base font-medium hover:underline underline-offset-4"
             prefetch={false}>
             Precios
           </Link>
           <Link
-            href="#"
+            href="/pages/aboutUs"
             className="text-base font-medium hover:underline underline-offset-4"
             prefetch={false}>
             Acerca de nosotros

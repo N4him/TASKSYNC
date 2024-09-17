@@ -1,19 +1,18 @@
 import Link from "next/link";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-
 
 function FeaturesPage() {
   return (
     <div className="flex flex-col min-h-[100dvh]">
       <header className="px-4 lg:px-8 h-auto flex items-center justify-between">
-        <Link href="#" className="flex items-center justify-center" prefetch={false}>
+        <Link href="/" className="flex items-center justify-center" prefetch={false}>
           <img src="/images/logo_transparent.png" alt="Logo principal" className="h-24 w-24 max-w-none" />
           <span className="sr-only">Task Manager</span>
         </Link>
         <nav className="ml-auto flex items-center gap-4 sm:gap-6">
+          <Link href="/" className="text-base font-medium hover:underline underline-offset-4" prefetch={false}>
+            Inicio
+          </Link>
           <Link
             href="/pages/features"
             className="text-base font-medium hover:underline underline-offset-4"
@@ -21,13 +20,13 @@ function FeaturesPage() {
             Características
           </Link>
           <Link
-            href="#"
+            href="/pages/prices"
             className="text-base font-medium hover:underline underline-offset-4"
             prefetch={false}>
             Precios
           </Link>
           <Link
-            href="#"
+            href="/pages/aboutUs"
             className="text-base font-medium hover:underline underline-offset-4"
             prefetch={false}>
             Acerca de nosotros
@@ -41,151 +40,158 @@ function FeaturesPage() {
         </nav>
       </header>
 
-      <main className="flex-1">
-        <section className="w-full py-12 md:py-24 lg:py-32">
-          <div className="container px-4 md:px-6">
-            <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
-              <div className="flex flex-col justify-center space-y-4">
+      <main className="flex-1 flex flex-col items-center justify-center">
+        <section className="w-full py-12 md:py-24 lg:py-32 flex justify-center">
+          <div className="container px-4 md:px-6 flex flex-col items-center">
+            <div className="grid gap-6 lg:grid-cols-1 xl:grid-cols-1 justify-center">
+              <div className="flex flex-col justify-center space-y-4 items-center text-center">
                 <div className="space-y-2">
                   <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                    Características destacadas de TaskSync
+                    Características Principales de TaskSync
                   </h1>
-                  <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                    Descubre cómo TaskSync puede transformar la manera en que trabajas.
+                  <p className="max-w-[600px] text-muted-foreground md:text-xl text-center mx-auto">
+                    A continuación, puedes explorar las características clave que hacen de TaskSync la herramienta perfecta para la gestión de tareas.
                   </p>
                 </div>
-                <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                  <Link
-                    href="/pages/signup"
-                    className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-                    prefetch={false}>
-                    ¡Empieza ahora!
-                  </Link>
-                  <Link
-                    href="#"
-                    className="inline-flex h-10 items-center justify-center rounded-md border border-input bg-background px-8 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-                    prefetch={false}>
-                    Aprende más
-                  </Link>
-                </div>
-              </div>
-              <img
-                src="/images/features.png"
-                width="550"
-                height="550"
-                alt="Features"
-                className="mx-auto aspect-video overflow-hidden rounded-xl object-cover sm:w-full lg:order-last lg:aspect-square" />
-            </div>
-          </div>
-        </section>
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-muted">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
-                <div className="inline-block rounded-lg bg-muted px-3 py-1 text-3xl">Características Clave</div>
-                <h2 className="text-xl font-bold tracking-tighter sm:text-5xl">
-                  Herramientas poderosas para tu productividad
-                </h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl lg:text-base xl:text-xl text-center mx-auto">
-                  TaskSync te ofrece un conjunto completo de herramientas para gestionar tus tareas y colaborar con tu equipo.
-                </p>
-              </div>
-            </div>
-            <div className="mx-auto grid max-w-5xl items-start gap-6 py-12 lg:grid-cols-3 lg:gap-12">
-              <div className="flex flex-col items-center justify-center space-y-4 text-center">
-                <div className="bg-muted rounded-full p-4">
-                  <CalendarIcon className="h-8 w-8" />
-                </div>
-                <div className="space-y-2">
-                  <h3 className="text-xl font-bold">Programación de tareas</h3>
-                  <p className="text-muted-foreground">
-                    Asigna y rastrea tareas fácilmente con una interfaz intuitiva.
-                  </p>
-                </div>
-              </div>
-              <div className="flex flex-col items-center justify-center space-y-4 text-center">
-                <div className="bg-muted rounded-full p-4">
-                  <UsersIcon className="h-8 w-8" />
-                </div>
-                <div className="space-y-2">
-                  <h3 className="text-xl font-bold">Trabajo en equipo</h3>
-                  <p className="text-muted-foreground">
-                    Colabora con tu equipo en tiempo real y mantén todos en la misma página.
-                  </p>
-                </div>
-              </div>
-              <div className="flex flex-col items-center justify-center space-y-4 text-center">
-                <div className="bg-muted rounded-full p-4">
-                  <GaugeIcon className="h-8 w-8" />
-                </div>
-                <div className="space-y-2">
-                  <h3 className="text-xl font-bold">Seguimiento de proceso</h3>
-                  <p className="text-muted-foreground">
-                    Monitorea el progreso de las tareas y obtén una visión clara del estado de los proyectos.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-        <section className="w-full py-12 md:py-24 lg:py-32">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
-                <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">Testimonios</div>
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Lo que dicen nuestros usuarios</h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Escucha las experiencias de nuestros usuarios y cómo TaskSync ha mejorado su gestión de tareas.
-                </p>
-              </div>
-            </div>
-            <div className="mx-auto grid max-w-5xl items-start gap-6 py-12 lg:grid-cols-2 lg:gap-12">
-              <div className="flex flex-col items-start space-y-4">
-                <div className="bg-muted rounded-lg p-6">
-                  <div className="flex items-start space-x-4">
-                    <Avatar>
-                      <AvatarImage src="/placeholder-user.jpg" />
-                      <AvatarFallback>JA</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="text-lg font-medium">John Aguirre</p>
-                      <p className="text-sm text-muted-foreground">Project Manager</p>
-                    </div>
+
+                {/* Contenedor de párrafos adicionales */}
+                <div className="space-y-4 text-left max-w-[800px]">
+                  <div className="p-4 bg-muted rounded-lg shadow-sm">
+                    <p>
+                      TaskSync permite que las tareas sean asignadas y gestionadas en tiempo real. Cada usuario puede recibir y actualizar sus tareas al instante, manteniendo a todo el equipo sincronizado con las últimas actualizaciones.
+                    </p>
                   </div>
-                  <Separator className="my-4" />
-                  <p className="text-muted-foreground">
-                    "TaskSync ha transformado la forma en que nuestro equipo gestiona las tareas. La facilidad de uso y las funcionalidades son excepcionales."
-                  </p>
-                </div>
-              </div>
-              <div className="flex flex-col items-start space-y-4">
-                <div className="bg-muted rounded-lg p-6">
-                  <div className="flex items-start space-x-4">
-                    <Avatar>
-                      <AvatarImage src="/placeholder-user.jpg" />
-                      <AvatarFallback>MS</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="text-lg font-medium">Maria Salazar</p>
-                      <p className="text-sm text-muted-foreground">Desarrolladora</p>
-                    </div>
+                  <div className="p-4 bg-muted rounded-lg shadow-sm">
+                    <p>
+                      Las tareas pueden ser marcadas en diferentes estados: "En progreso", "Pendiente" o "Finalizada". Estos estados permiten un seguimiento claro del avance de cada tarea, facilitando la coordinación entre los miembros del equipo.
+                    </p>
                   </div>
-                  <Separator className="my-4" />
-                  <p className="text-muted-foreground">
-                    "Recomiendo TaskSync a cualquier equipo que quiera mejorar su eficiencia y colaboración. Ha sido un cambio positivo para nosotros."
-                  </p>
+                  <div className="p-4 bg-muted rounded-lg shadow-sm">
+                    <p>
+                      Una de las principales ventajas de TaskSync es la capacidad de asignar tareas a diferentes usuarios. Los administradores o líderes de equipo pueden asignar tareas a cualquier miembro, asegurando que todos tengan responsabilidades claras.
+                    </p>
+                  </div>
+                  <div className="p-4 bg-muted rounded-lg shadow-sm">
+                    <p>
+                      TaskSync notifica a los usuarios de cualquier cambio importante en sus tareas, como nuevas asignaciones, cambios de estado o comentarios adicionales, para que siempre estén al tanto de lo que sucede en tiempo real.
+                    </p>
+                  </div>
+                  <div className="p-4 bg-muted rounded-lg shadow-sm">
+                    <p>
+                      Los usuarios pueden filtrar sus tareas de acuerdo a diferentes criterios como estado (pendiente, en progreso, finalizada), usuario responsable o fecha de vencimiento, facilitando una visión clara de sus prioridades.
+                    </p>
+                  </div>
+                  <div className="p-4 bg-muted rounded-lg shadow-sm">
+                    <p>
+                      TaskSync está diseñado para fomentar la colaboración. Los miembros del equipo pueden comentar y discutir en cada tarea, asegurando que todos estén alineados con los objetivos y avances del proyecto.
+                    </p>
+                  </div>
+                  <div className="p-4 bg-muted rounded-lg shadow-sm">
+                    <p>
+                      Cada usuario puede personalizar su panel de tareas, mostrando únicamente lo que es relevante para su trabajo, ya sea por proyecto, fecha de entrega o prioridad.
+                    </p>
+                  </div>
+                  <div className="p-4 bg-muted rounded-lg shadow-sm">
+                    <p>
+                      TaskSync ofrece un panel donde se muestra el progreso global del proyecto, con un resumen del estado de las tareas de todos los usuarios, permitiendo a los gerentes identificar cuellos de botella o retrasos.
+                    </p>
+                  </div>
+                  <div className="p-4 bg-muted rounded-lg shadow-sm">
+                    <p>
+                      Ya sea en el escritorio o el móvil, TaskSync se adapta perfectamente a cualquier dispositivo, permitiendo que los usuarios gestionen sus tareas sin importar dónde se encuentren.
+                    </p>
+                  </div>
+                  <div className="p-4 bg-muted rounded-lg shadow-sm">
+                    <p>
+                      Las tareas de TaskSync se pueden integrar con herramientas de calendario, lo que permite a los usuarios ver sus plazos importantes directamente en sus aplicaciones de calendario, mejorando la organización y planificación.
+                    </p>
+                  </div>
+                </div>
+                <div>
+                </div>
+                <div>
+                </div>
+                {/* Tarjetas de características */}
+                <div className="grid gap-6 lg:grid-cols-3 justify-center mt-8">
+                  {/* Primera fila de tarjetas */}
+                  <div className="p-4 bg-muted rounded-lg shadow-lg max-w-[300px] transition-transform transform hover:scale-105">
+                    <h3 className="text-xl font-bold mb-2">Programación de tareas</h3>
+                    <p className="text-muted-foreground">
+                      Organiza tus tareas de forma eficiente y mantén un seguimiento claro de tus proyectos.
+                    </p>
+                  </div>
+
+                  <div className="p-4 bg-muted rounded-lg shadow-lg max-w-[300px] transition-transform transform hover:scale-105">
+                    <h3 className="text-xl font-bold mb-2">Colaboración en tiempo real</h3>
+                    <p className="text-muted-foreground">
+                      Trabaja con tu equipo simultáneamente y mantén a todos sincronizados en cada fase del proyecto.
+                    </p>
+                  </div>
+
+                  <div className="p-4 bg-muted rounded-lg shadow-lg max-w-[300px]  transition-transform transform hover:scale-105">
+                    <h3 className="text-xl font-bold mb-2">Análisis detallados</h3>
+                    <p className="text-muted-foreground">
+                      Obtén informes sobre el rendimiento y los avances de cada miembro del equipo.
+                    </p>
+                  </div>
+
+                  {/* Segunda fila de tarjetas adicionales */}
+                  <div className="p-4 bg-muted rounded-lg shadow-lg max-w-[300px]  transition-transform transform hover:scale-105">
+                    <h3 className="text-xl font-bold mb-2">Integración con calendarios</h3>
+                    <p className="text-muted-foreground">
+                      Sincroniza tus eventos y tareas con calendarios populares como Google Calendar.
+                    </p>
+                  </div>
+
+                  <div className="p-4 bg-muted rounded-lg shadow-lg max-w-[300px] transition-transform transform hover:scale-105">
+                    <h3 className="text-xl font-bold mb-2">Gestión de archivos</h3>
+                    <p className="text-muted-foreground">
+                      Sube, comparte y organiza archivos relacionados con tus proyectos sin esfuerzo.
+                    </p>
+                  </div>
+
+                  <div className="p-4 bg-muted rounded-lg shadow-lg max-w-[300px] transition-transform transform hover:scale-105">
+                    <h3 className="text-xl font-bold mb-2">Notificaciones personalizadas</h3>
+                    <p className="text-muted-foreground">
+                      Recibe alertas personalizadas para recordarte las fechas de vencimiento más importantes.
+                    </p>
+                  </div>
+
+                  {/* Tercera fila de tarjetas adicionales */}
+                  <div className="p-4 bg-muted rounded-lg shadow-lg max-w-[300px] transition-transform transform hover:scale-105">
+                    <h3 className="text-xl font-bold mb-2">Gestión de prioridades</h3>
+                    <p className="text-muted-foreground">
+                      Prioriza tareas para garantizar que lo más importante siempre se atienda primero.
+                    </p>
+                  </div>
+
+                  <div className="p-4 bg-muted rounded-lg shadow-lg max-w-[300px] transition-transform transform hover:scale-105">
+                    <h3 className="text-xl font-bold mb-2">Reportes en tiempo real</h3>
+                    <p className="text-muted-foreground">
+                      Genera reportes de avance en tiempo real para mantener a todos informados.
+                    </p>
+                  </div>
+
+                  <div className="p-4 bg-muted rounded-lg shadow-lg max-w-[300px] transition-transform transform hover:scale-105">
+                    <h3 className="text-xl font-bold mb-2">Tareas recurrentes</h3>
+                    <p className="text-muted-foreground">
+                      Programa tareas recurrentes automáticamente para mantener tu flujo de trabajo sin interrupciones.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </section>
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-muted">
+
+        {/* Otra sección de texto */}
+        <section className="w-full py-12 md:py-24 lg:py-32 bg-muted flex justify-center">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">¡Comienza hoy mismo con TaskSync!</h2>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">¿Estás listo para mejorar la productividad de tu equipo?</h2>
                 <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-center mx-auto">
-                  Regístrate ahora y experimenta cómo TaskSync puede mejorar tu flujo de trabajo.
+                  Regístrate en TaskSync hoy y experimenta la mejor herramienta de tareas cooperativas.
                 </p>
               </div>
               <div className="mx-auto w-full max-w-sm space-y-2">
@@ -199,7 +205,7 @@ function FeaturesPage() {
                   </Link>
                 </form>
                 <p className="text-xs text-muted-foreground">
-                  Regístrate hoy y comienza a utilizar TaskSync. No se requiere tarjeta de crédito.{" "}
+                  Regístrate y empieza hoy. No necesitas tarjeta.{" "}
                   <Link href="#" className="underline underline-offset-2" prefetch={false}>
                     Términos &amp; condiciones
                   </Link>
@@ -209,6 +215,7 @@ function FeaturesPage() {
           </div>
         </section>
       </main>
+
       <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
         <p className="text-xs text-muted-foreground">&copy; 2024 TaskSync. Todos los derechos reservados</p>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
@@ -227,68 +234,6 @@ function FeaturesPage() {
         </nav>
       </footer>
     </div>
-  );
-}
-function CalendarIcon(props) {
-  return (
-    (<svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round">
-      <path d="M8 2v4" />
-      <path d="M16 2v4" />
-      <rect width="18" height="18" x="3" y="4" rx="2" />
-      <path d="M3 10h18" />
-    </svg>)
-  );
-}
-
-
-function GaugeIcon(props) {
-  return (
-    (<svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round">
-      <path d="m12 14 4-4" />
-      <path d="M3.34 19a10 10 0 1 1 17.32 0" />
-    </svg>)
-  );
-}
-
-
-function UsersIcon(props) {
-  return (
-    (<svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round">
-      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-      <circle cx="9" cy="7" r="4" />
-      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-    </svg>)
   );
 }
 

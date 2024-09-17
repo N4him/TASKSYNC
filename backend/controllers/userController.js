@@ -1,7 +1,17 @@
 const User = require('../models/userModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-require('dotenv').config(); // Asegúrate de que dotenv esté configurado
+require('dotenv').config();
+const nodemailer = require('nodemailer');
+
+// Configuración de nodemailer
+const transporter = nodemailer.createTransport({
+  service: 'gmail', // Puedes usar otro proveedor si lo prefieres
+  auth: {
+    user: process.env.EMAIL_USER, // Tu correo electrónico
+    pass: process.env.EMAIL_PASS, // Tu contraseña de correo electrónico
+  },
+});
 
 // Crear un nuevo usuario
 exports.createUser = async (req, res) => {
@@ -25,12 +35,22 @@ exports.createUser = async (req, res) => {
 
     await user.save();
 
+    // Enviar un correo electrónico de bienvenida
+    const mailOptions = {
+      from: process.env.EMAIL_USER, // Tu correo electrónico verificado
+      to: email,
+      subject: 'Bienvenido a nuestra plataforma',
+      text: `Hola ${name}, gracias por registrarte en nuestra plataforma.`,
+    };
+
+    await transporter.sendMail(mailOptions);
+
     res.status(201).json({ message: 'Usuario registrado con éxito' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error del servidor' });
   }
-}
+};
 
 // Obtener todos los usuarios con rol 'user'
 exports.getUsers = async (req, res) => {
@@ -40,7 +60,7 @@ exports.getUsers = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Error fetching users' });
   }
-}
+};
 
 // Login (iniciar sesión)
 exports.loginUser = async (req, res) => {
@@ -62,8 +82,8 @@ exports.loginUser = async (req, res) => {
     // Generar un token JWT
     const token = jwt.sign(
       { id: user._id, email: user.email, role: user.role },
-      process.env.JWT_SECRET_KEY, // Usa la variable de entorno
-      { expiresIn: '1h' } // El token expira en 1 hora, ajusta según necesites
+      process.env.JWT_SECRET_KEY,
+      { expiresIn: '1h' }
     );
 
     res.status(200).json({
@@ -76,4 +96,4 @@ exports.loginUser = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Error del servidor', error: error.message });
   }
-}
+};

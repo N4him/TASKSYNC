@@ -34,13 +34,33 @@ import { Pencil, Trash2, Plus, User, LogOut, Settings, HelpCircle } from "lucide
 const API_URL = "http://localhost:5000/api/tasks";
 const USERS_URL = "http://localhost:5000/api/users";
 
+
 export default function AdminPageUpdated() {
   const [tasks, setTasks] = useState([]);
   const [users, setUsers] = useState([]);
   const [editingTask, setEditingTask] = useState(null);
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
+const formatDateForInput = (dateString) => {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  // Convert to local time zone and format as "YYYY-MM-DDTHH:MM"
+  const offset = date.getTimezoneOffset();
+  date.setMinutes(date.getMinutes() - offset);
+  return date.toISOString().slice(0, 16);
+};
 
+const formatDateForDisplay = (dateString) => {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  // Convert to local time zone and format as locale-specific date/time
+  return date.toLocaleString();
+};
+export default function AdminPageUpdated() {
+  const [tasks, setTasks] = useState([]);
+  const [editingTask, setEditingTask] = useState(null);
+  const [newTaskTitle, setNewTaskTitle] = useState("");
+  
   useEffect(() => {
     const fetchTasks = async () => {
       try {
@@ -69,19 +89,37 @@ export default function AdminPageUpdated() {
     fetchTasks();
     fetchUsers();
   }, []);
+const addTask = async () => {
+  if (newTaskTitle.trim() !== "") {
+    try {
+      const token = localStorage.getItem("token"); // Obtener el token para la autenticación
 
-  const addTask = async () => {
-    if (newTaskTitle.trim() !== "") {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.post(API_URL, {
-          title: newTaskTitle,
-          status: "ongoing",
-          assignedTo: selectedUser ? selectedUser._id : null // Asegúrate de enviar el ID del usuario
-        }, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setTasks([...tasks, response.data]);
+      const newTask = {
+        title: newTaskTitle,
+        status: "ongoing",
+        assignedTo: selectedUser ? selectedUser._id : null, // Enviar el ID del usuario seleccionado
+        deadline: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // Fecha límite por defecto (mañana)
+      };
+
+      const response = await fetch('http://localhost:5000/api/tasks', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`, // Autenticación con token
+        },
+        body: JSON.stringify(newTask),
+      });
+
+      if (response.ok) {
+        const createdTask = await response.json(); // Obtener la tarea creada
+        setTasks([...tasks, createdTask]); // Actualizar la lista de tareas
+      }
+    } catch (error) {
+      console.error("Error adding task:", error);
+    }
+  }
+};
+
         setNewTaskTitle("");
         setSelectedUser(null); // Limpiar el usuario seleccionado
       } catch (error) {
@@ -128,6 +166,9 @@ export default function AdminPageUpdated() {
     } catch (error) {
       console.error("Error toggling task status:", error);
     }
+    updateTask(updatedTask);
+  }
+
   };
 
   const findUserNameById = (id) => {
@@ -136,7 +177,6 @@ export default function AdminPageUpdated() {
   };
   
 
-  
 
   return (
     <div className="min-h-screen bg-[#0A1A2B] text-white">
@@ -228,6 +268,7 @@ export default function AdminPageUpdated() {
                   <TableHead className="text-white">ID</TableHead>
                   <TableHead className="text-white">Title</TableHead>
                   <TableHead className="text-white">Description</TableHead>
+                  <TableHead className="text-white">Deadline</TableHead>
                   <TableHead className="text-white">Status</TableHead>
                   <TableHead className="text-white">Assigned To</TableHead>
                   <TableHead className="text-white">Actions</TableHead>
@@ -235,10 +276,13 @@ export default function AdminPageUpdated() {
               </TableHeader>
               <TableBody>
                 {tasks.map(task => (
-                  <TableRow key={task.id}>
-                    <TableCell>{task.id}</TableCell>
-                    <TableCell>{task.title}</TableCell>
+                  <TableRow key={task.id}>               
+
+                    <TableCell className="text-white">{task.id}</TableCell>
+                    <TableCell className="text-white">{task.title}</TableCell>
                     <TableCell>{task.description}</TableCell>
+                    <TableCell className="text-white">{formatDateForDisplay(task.deadline)}</TableCell>
+
                     <TableCell>
                       <Button onClick={() => toggleTaskStatus(task.id)} className="bg-[#4FADFF] text-white hover:bg-[#3D8CD9]">
                         {task.status === "ongoing" ? "Mark as Done" : "Mark as Ongoing"}
@@ -271,11 +315,20 @@ export default function AdminPageUpdated() {
                             <div className="mb-4">
                               <Label htmlFor="description" className="text-white">Description</Label>
                               <Input
-                                id="description"
+                                id="task-title"
+                                value={editingTask?.title || ""}
+                                onChange={(e) =>
+                                  setEditingTask(editingTask ? { ...editingTask, title: e.target.value } : null)
+                                }
+                                className="col-span-3" />
+                               <Input
+id="description"
                                 type="text"
                                 value={editingTask?.description || ''}
                                 onChange={(e) => setEditingTask({ ...editingTask, description: e.target.value })}
                               />
+
+                                
                             </div>
                             <div className="mb-4">
                               <Label htmlFor="assignedTo" className="text-white">Assign To</Label>
@@ -296,6 +349,22 @@ export default function AdminPageUpdated() {
                                   ))}
                                 </DropdownMenuContent>
                               </DropdownMenu>
+
+                                
+                              <Label htmlFor="task-deadline" className="text-right mt-4">
+                                Deadline
+                              </Label>
+                              <Input
+                                id="task-deadline"
+                                type="datetime-local"
+                                value={editingTask?.deadline
+                                  ? formatDateForInput(editingTask.deadline) // Use formatting function for input
+                                  : ""}
+                                onChange={(e) =>
+                                  setEditingTask(editingTask ? { ...editingTask, deadline: e.target.value } : null)
+                                }
+                                className="col-span-3" />
+
                             </div>
                             <DialogFooter>
                               <Button
@@ -328,3 +397,4 @@ export default function AdminPageUpdated() {
     </div>
   );
 }
+

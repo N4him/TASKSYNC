@@ -19,6 +19,7 @@ const taskSchema = new mongoose.Schema({
     enum: ['ongoing', 'finished'],
     default: 'ongoing',
   },
+
   assignedTo: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User', // Referencia al modelo User
@@ -28,6 +29,14 @@ const taskSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   }
+
+  category: { 
+    type: String,
+    required: true,
+    default: 'None' 
+  },
+  deadline: Date,
+
 });
 
 // Middleware para asignar un ID único y ascendente antes de guardar la tarea

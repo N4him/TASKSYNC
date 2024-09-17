@@ -28,14 +28,20 @@ function PricingPage() {
         </nav>
       </header>
 
-      <main className="flex-1 flex flex-col items-center justify-center">
+      <main className="flex-1">
         {/* Sección de Precios */}
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-muted flex justify-center items-center">
-          <div className="container px-4 md:px-6 text-center">
-            <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl mb-12">Nuestros Planes de Precios</h1>
-            <div className="flex flex-wrap justify-center gap-6 lg:gap-8">
+        <section className="w-full py-12 md:py-24 lg:py-32 bg-muted">
+          <div className="container mx-auto px-4 md:px-6">
+            <div className="flex flex-col items-center justify-center text-center space-y-8">
+              <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl">Nuestros Planes de Precios</h1>
+              <p className="text-lg text-muted-foreground max-w-2xl">
+                Elige el plan que mejor se adapte a tu equipo y empieza a mejorar tu productividad hoy mismo.
+              </p>
+            </div>
+            
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 py-12 lg:gap-12">
               {/* Plan Básico */}
-              <div className="flex flex-col items-center text-center p-6 bg-zinc-600 border border-muted rounded-lg shadow-lg max-w-sm transition-transform transform hover:scale-105">
+              <div className="flex flex-col items-center text-center p-6 bg-zinc-600 border border-muted rounded-lg shadow-lg transition-transform transform hover:scale-105">
                 <h2 className="text-2xl font-bold mb-4">Básico</h2>
                 <p className="text-lg mb-4">$10/mes</p>
                 <p className="text-muted-foreground mb-4">
@@ -50,7 +56,7 @@ function PricingPage() {
               </div>
 
               {/* Plan Profesional */}
-              <div className="flex flex-col items-center text-center p-6 bg-zinc-600 border border-muted rounded-lg shadow-lg max-w-sm transition-transform transform hover:scale-105">
+              <div className="flex flex-col items-center text-center p-6 bg-zinc-600 border border-muted rounded-lg shadow-lg transition-transform transform hover:scale-105">
                 <h2 className="text-2xl font-bold mb-4">Profesional</h2>
                 <p className="text-lg mb-4">$30/mes</p>
                 <p className="text-muted-foreground mb-4">
@@ -65,7 +71,7 @@ function PricingPage() {
               </div>
 
               {/* Plan Enterprise */}
-              <div className="flex flex-col items-center text-center p-6 bg-zinc-600 border border-muted rounded-lg shadow-lg max-w-sm transition-transform transform hover:scale-105">
+              <div className="flex flex-col items-center text-center p-6 bg-zinc-600 border border-muted rounded-lg shadow-lg transition-transform transform hover:scale-105">
                 <h2 className="text-2xl font-bold mb-4">Enterprise</h2>
                 <p className="text-lg mb-4">Contacto</p>
                 <p className="text-muted-foreground mb-4">

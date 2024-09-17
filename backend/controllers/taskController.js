@@ -37,19 +37,39 @@ exports.getTasksForUser = async (req, res) => {
 };
 
 
+// Obtener tareas asignadas a un usuario específico por ID
+exports.getTasksByUserId = async (req, res) => {
+  try {
+    const userId = req.user.id; // Obtener el userId desde los parámetros de la ruta
+    console.log(userId)
+
+    // Buscar tareas asignadas a este usuario
+    const tasks = await Task.find({ assignedTo: userId })
+      .populate('creator', 'name') // Incluye el nombre del creador de la tarea
+      .exec();
+
+    // Si no hay tareas asignadas al usuario, devolver un mensaje
+    if (!tasks || tasks.length === 0) {
+      return res.status(404).json({ message: 'No tasks found for this user' });
+    }
+
+    // Devolver las tareas encontradas
+    res.json(tasks);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
+
 // Actualizar una tarea
 // controllers/taskController.js
 
 exports.updateTask = async (req, res) => {
-  try {
+  try {  
     const task = await Task.findOne({ id: req.params.id });
     if (!task) return res.status(404).json({ message: 'Task not found' });
-
-    // Verificar si el usuario está autorizado a actualizar la tarea
-    if (task.creator.toString() !== req.user.id) {
-      return res.status(403).json({ message: 'Unauthorized' });
-    }
-
+    
     task.title = req.body.title || task.title;
     task.description = req.body.description || task.description;
     task.status = req.body.status || task.status;

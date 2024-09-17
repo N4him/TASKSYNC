@@ -47,7 +47,7 @@ export default function SignUp() {
       if (role == "admin") {
         router.push("/pages/login");
       } else {
-        router.push("/pages/signin");
+        router.push("/pages/login");
       }
     } catch (err) {
       setError(err.message);

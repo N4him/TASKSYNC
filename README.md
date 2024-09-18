@@ -1,70 +1,130 @@
-# Getting Started with Create React App
+![Transparent Logo](frontend/public/images/logo_transparent.png)
+TaskSync es una plataforma colaborativa de gestión de tareas diseñada para ayudar a los equipos a crear, asignar y gestionar tareas de manera eficiente, con funcionalidades como autenticación de usuarios, control de acceso basado en roles, notificaciones automáticas y visibilidad de tareas según grupos.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Funcionalidades
 
-## Available Scripts
+- **Autenticación de Usuarios**: Inicio de sesión y registro seguro utilizando JWT para autenticación basada en tokens.
+- **Creación y Asignación de Tareas**: Crea tareas y asígnalas fácilmente a los miembros del equipo.
+- **Notificaciones Automáticas**: Recibe notificaciones en tiempo real para eventos importantes (como la asignación de tareas).
+- **Control de Acceso Basado en Roles (RBAC)**: Gestiona el acceso con roles y permisos para diferentes usuarios.
+- **Visibilidad de Tareas por Grupo**: Controla la visibilidad de tareas basadas en los grupos de usuarios.
+- **Diseño Responsivo**: Interfaz amigable para el usuario y accesible en todos los dispositivos.
 
-In the project directory, you can run:
+## Tecnologías
 
-### `npm start`
+- **Frontend**: React.js, Tailwind CSS
+- **Backend**: Node.js, Express.js
+- **Base de Datos**: MongoDB, Mongoose
+- **Autenticación**: JSON Web Tokens (JWT)
+- **Notificaciones**: Nodemailer
+- **Gestión del Proyecto**: Jira, metodología Scrum
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Estructura del Proyecto
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```bash
+TaskSync/
+│
+├── backend/         # Backend con Node.js y Express, integrado con MongoDB
+│   ├── config/      # Configuración de la base de datos y variables de entorno
+│   ├── controllers/ # Lógica para manejar solicitudes (auth, tareas, etc.)
+│   ├── models/      # Esquemas de MongoDB para usuarios, tareas, etc.
+│   ├── routes/      # Rutas de la API
+│   ├── utils/       # Funciones utilitarias (notificaciones, JWT, etc.)
+│   └── app.js       # Punto de entrada del backend
+│
+├── frontend/        # Frontend con React y UI para la gestión de tareas
+│   ├── src/
+│   │   ├── components/ # Componentes reutilizables (login, formularios de tareas, etc.)
+│   │   ├── pages/      # Páginas de la aplicación (tablero, vista de tareas, etc.)
+│   │   ├── services/   # Llamadas a la API y gestión de estado (ej., Redux)
+│   │   └── App.js      # Punto de entrada del frontend
+│
+└── README.md        # Documentación del proyecto
+```
 
-### `npm test`
+## Instalación
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. **Clonar el repositorio**
 
-### `npm run build`
+   ```bash
+   git clone https://github.com/N4him/TASKSYNC.git
+   cd TaskSync
+   ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2. **Configurar el Backend**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+   - Navega a la carpeta `backend/`.
+   - Instala las dependencias:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+     ```bash
+     cd backend
+     npm install
+     ```
 
-### `npm run eject`
+   - Configura las variables de entorno creando un archivo `.env`:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+     ```
+     MONGO_URI=tu-string-de-conexión-mongodb
+     PORT=5000
+     JWT_SECRET=tu-clave-secreta
+     EMAIL_USER: tu cuenta publica para notificaciones
+     EMAIL_PASS: la contraseña de tu cuenta
+     
+     ```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+   - Inicia el servidor del backend:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+     ```bash
+     npm start
+     ```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+3. **Configurar el Frontend**
 
-## Learn More
+   - Navega a la carpeta `frontend/`.
+   - Instala las dependencias:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+     ```bash
+     cd frontend
+     npm install
+     ```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+   - Inicia el servidor de desarrollo del frontend:
 
-### Code Splitting
+     ```bash
+     npm run dev
+     ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+4. **Acceder a la aplicación**
 
-### Analyzing the Bundle Size
+   - Visita `http://localhost:3000` para acceder al frontend.
+   - El backend estará ejecutándose en `http://localhost:5000`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Uso
 
-### Making a Progressive Web App
+- **Inicio de sesión/Registro**: Los nuevos usuarios pueden registrarse o iniciar sesión para acceder a sus tareas.
+- **Gestión de Tareas**: Los usuarios lideres o administradores pueden crear, asignar, editar y eliminar tareas dentro de sus equipos.
+- **Notificaciones**: Los usuarios reciben notificaciones cuando se asignan tareas.
+- **Visibilidad por Grupos**: La visibilidad de las tareas es controlada por los grupos de usuarios, asegurando que cada usuario vea solo las tareas relevantes de su respectivo grupo.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Contribuir
 
-### Advanced Configuration
+¡Las contribuciones son bienvenidas! Sigue estos pasos para contribuir:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+1. Haz un fork del repositorio.
+2. Crea una nueva rama para tu feature (`git checkout -b nombre-feature`).
+3. Haz commit de tus cambios (`git commit -m 'Añadir una nueva funcionalidad'`).
+4. Haz push de la rama (`git push origin nombre-feature`).
+5. Abre un pull request.
 
-### Deployment
+## Licencia
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Este proyecto está bajo la licencia MIT - consulta el archivo [LICENSE](LICENSE) para más detalles.
 
-### `npm run build` fails to minify
+## Contacto
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Si tienes alguna pregunta o sugerencia, no dudes en contactarme:
+
+- **Email**: n4ahim180@gmail.com
+- **GitHub**: https://github.com/N4him
+
+---
